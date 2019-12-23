@@ -1,16 +1,17 @@
 language: rust
 
 rust:
-  - nightly
-  - beta
   - stable
+  - beta
 
-script:
-  - cargo test
-  - cargo test --benches --release
+script: cargo test
 
 matrix:
   include:
+    - rust: nightly
+      script:
+        - cargo test
+        - cargo test --benches --release
     - rust: 1.31.0
       script: cargo check
     - rust: nightly
