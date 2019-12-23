@@ -8,3 +8,8 @@ rust:
 script:
   - cargo test
   - cargo test --benches --release
+
+matrix:
+  include:
+    - rust: 1.31.0
+      script: cargo check
