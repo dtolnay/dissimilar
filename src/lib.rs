@@ -1,3 +1,10 @@
+#![allow(
+    clippy::block_in_if_condition_stmt,
+    clippy::collapsible_if,
+    clippy::comparison_chain,
+    clippy::new_without_default
+)]
+
 mod find;
 mod range;
 
