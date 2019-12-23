@@ -1,3 +1,32 @@
+//! ## Diff library with semantic cleanup, based on Google's diff-match-patch
+//!
+//! This library is a port of the Diff component of [Diff Match Patch] to Rust.
+//! The diff implementation is based on [Myers' diff algorithm] but includes
+//! some [semantic cleanups] to increase human readability by factoring out
+//! commonalities which are likely to be coincidental.
+//!
+//! Diff Match Patch was originally built in 2006 to power Google Docs.
+//!
+//! # Interface
+//!
+//! Here is the entire API of the Rust implementation. It operates on borrowed
+//! strings and the return value of the diff algorithm is a vector of chunks
+//! pointing into slices of those input strings.
+//!
+//! ```
+//! pub enum Chunk<'a> {
+//!     Equal(&'a str),
+//!     Delete(&'a str),
+//!     Insert(&'a str),
+//! }
+//!
+//! pub fn diff(text1: &str, text2: &str) -> Vec<Chunk>;
+//! ```
+//!
+//! [Diff Match Patch]: https://github.com/google/diff-match-patch
+//! [Myers' diff algorithm]: https://neil.fraser.name/writing/diff/myers.pdf
+//! [semantic cleanups]: https://neil.fraser.name/writing/diff/
+
 #![allow(
     clippy::block_in_if_condition_stmt,
     clippy::collapsible_if,
