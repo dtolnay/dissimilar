@@ -20,7 +20,9 @@
 //!     Insert(&'a str),
 //! }
 //!
+//! # const IGNORE: &str = stringify! {
 //! pub fn diff(text1: &str, text2: &str) -> Vec<Chunk>;
+//! # };
 //! ```
 //!
 //! [Diff Match Patch]: https://github.com/google/diff-match-patch
