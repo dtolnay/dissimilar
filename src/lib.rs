@@ -1,6 +1,9 @@
 mod find;
 mod range;
 
+#[cfg(test)]
+mod tests;
+
 use crate::range::{bytes, str, Range};
 use std::cmp;
 use std::collections::VecDeque;
