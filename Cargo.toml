@@ -7,4 +7,6 @@ license = "MIT OR Apache-2.0"
 description = "Diff library with semantic cleanup, based on Google's diff-match-patch"
 repository = "https://github.com/dtolnay/dissimilar"
 documentation = "https://docs.rs/dissimilar"
+keywords = ["diff"]
+categories = ["algorithms", "text-processing"]
 readme = "README.md"
