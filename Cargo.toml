@@ -10,3 +10,6 @@ documentation = "https://docs.rs/dissimilar"
 keywords = ["diff"]
 categories = ["algorithms", "text-processing"]
 readme = "README.md"
+
+[badges]
+travis-ci = { repository = "dtolnay/dissimilar" }
