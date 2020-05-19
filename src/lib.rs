@@ -31,7 +31,7 @@
 
 #![doc(html_root_url = "https://docs.rs/dissimilar/1.0.1")]
 #![allow(
-    clippy::block_in_if_condition_stmt,
+    clippy::blocks_in_if_conditions,
     clippy::collapsible_if,
     clippy::comparison_chain,
     clippy::new_without_default
