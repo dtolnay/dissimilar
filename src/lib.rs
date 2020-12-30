@@ -40,9 +40,18 @@
 #![doc(html_root_url = "https://docs.rs/dissimilar/1.0.2")]
 #![allow(
     clippy::blocks_in_if_conditions,
+    clippy::cast_possible_wrap,
+    clippy::cast_sign_loss,
     clippy::collapsible_if,
     clippy::comparison_chain,
-    clippy::new_without_default
+    clippy::match_same_arms,
+    clippy::module_name_repetitions,
+    clippy::must_use_candidate,
+    clippy::new_without_default,
+    clippy::shadow_unrelated,
+    clippy::similar_names,
+    clippy::too_many_lines,
+    clippy::unseparated_literal_suffix
 )]
 
 mod find;
