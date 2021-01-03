@@ -63,7 +63,7 @@ mod tests;
 use crate::range::{bytes, str, Range};
 use std::cmp;
 use std::collections::VecDeque;
-use std::fmt::{self, Debug};
+use std::fmt::{self, Debug, Display};
 
 #[derive(Copy, Clone, PartialEq, Eq)]
 pub enum Chunk<'a> {
@@ -891,6 +891,16 @@ impl<'a> From<Diff<'a, 'a>> for Chunk<'a> {
             Diff::Equal(range, _) => Chunk::Equal(str(range)),
             Diff::Delete(range) => Chunk::Delete(str(range)),
             Diff::Insert(range) => Chunk::Insert(str(range)),
+        }
+    }
+}
+
+impl Display for Chunk<'_> {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Chunk::Equal(text) => write!(formatter, "{}", text),
+            Chunk::Delete(text) => write!(formatter, "\x1b[41m{}\x1b[0m", text),
+            Chunk::Insert(text) => write!(formatter, "\x1b[42m{}\x1b[0m", text),
         }
     }
 }
