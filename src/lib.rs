@@ -42,7 +42,7 @@
     clippy::blocks_in_if_conditions,
     clippy::cast_possible_wrap,
     clippy::cast_sign_loss,
-    clippy::collapsible_if,
+    clippy::collapsible_else_if,
     clippy::comparison_chain,
     clippy::match_same_arms,
     clippy::module_name_repetitions,
