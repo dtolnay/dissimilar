@@ -42,6 +42,7 @@
     clippy::blocks_in_if_conditions,
     clippy::cast_possible_wrap,
     clippy::cast_sign_loss,
+    clippy::cloned_instead_of_copied, // https://github.com/rust-lang/rust-clippy/issues/7127
     clippy::collapsible_else_if,
     clippy::comparison_chain,
     clippy::match_same_arms,
