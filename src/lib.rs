@@ -62,6 +62,7 @@ mod range;
 mod tests;
 
 use crate::range::{bytes, str, Range};
+use retain_mut::RetainMut;
 use std::cmp;
 use std::collections::VecDeque;
 use std::fmt::{self, Debug};
@@ -434,10 +435,25 @@ fn cleanup_char_boundary(solution: &mut Solution) {
         adjust
     }
 
-    for diff in &mut solution.diffs {
+    fn skip_overlap<'a>(prev: &Range<'a>, range: &mut Range<'a>) {
+        let prev_end = prev.offset + prev.len;
+        if prev_end > range.offset {
+            let delta = cmp::min(prev_end - range.offset, range.len);
+            range.offset += delta;
+            range.len -= delta;
+        }
+    }
+
+    let mut last_delete = Range::empty();
+    let mut last_insert = Range::empty();
+    solution.diffs.retain_mut(|diff| {
         match diff {
             Diff::Equal(range1, range2) => {
                 let adjust = boundary_up(range1.doc, range1.offset);
+                // If the whole range is sub-character, skip it.
+                if range1.len <= adjust {
+                    return false;
+                }
                 range1.offset += adjust;
                 range1.len -= adjust;
                 range2.offset += adjust;
@@ -445,23 +461,36 @@ fn cleanup_char_boundary(solution: &mut Solution) {
                 let adjust = boundary_down(range1.doc, range1.offset + range1.len);
                 range1.len -= adjust;
                 range2.len -= adjust;
+                last_delete = Range::empty();
+                last_insert = Range::empty();
             }
             Diff::Delete(range) => {
+                skip_overlap(&last_delete, range);
+                if range.len == 0 {
+                    return false;
+                }
                 let adjust = boundary_down(range.doc, range.offset);
                 range.offset -= adjust;
                 range.len += adjust;
                 let adjust = boundary_up(range.doc, range.offset + range.len);
                 range.len += adjust;
+                last_delete = *range;
             }
             Diff::Insert(range) => {
+                skip_overlap(&last_insert, range);
+                if range.len == 0 {
+                    return false;
+                }
                 let adjust = boundary_down(range.doc, range.offset);
                 range.offset -= adjust;
                 range.len += adjust;
                 let adjust = boundary_up(range.doc, range.offset + range.len);
                 range.len += adjust;
+                last_insert = *range;
             }
         }
-    }
+        true
+    });
 
     solution.utf8 = true;
 }
