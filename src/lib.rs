@@ -62,7 +62,6 @@ mod range;
 mod tests;
 
 use crate::range::{bytes, str, Range};
-use retain_mut::RetainMut;
 use std::cmp;
 use std::collections::VecDeque;
 use std::fmt::{self, Debug};
@@ -444,15 +443,18 @@ fn cleanup_char_boundary(solution: &mut Solution) {
         }
     }
 
+    let mut read = 0;
+    let mut retain = 0;
     let mut last_delete = Range::empty();
     let mut last_insert = Range::empty();
-    solution.diffs.retain_mut(|diff| {
-        match diff {
+    while let Some(&(mut diff)) = solution.diffs.get(read) {
+        read += 1;
+        match &mut diff {
             Diff::Equal(range1, range2) => {
                 let adjust = boundary_up(range1.doc, range1.offset);
                 // If the whole range is sub-character, skip it.
                 if range1.len <= adjust {
-                    return false;
+                    continue;
                 }
                 range1.offset += adjust;
                 range1.len -= adjust;
@@ -467,7 +469,7 @@ fn cleanup_char_boundary(solution: &mut Solution) {
             Diff::Delete(range) => {
                 skip_overlap(&last_delete, range);
                 if range.len == 0 {
-                    return false;
+                    continue;
                 }
                 let adjust = boundary_down(range.doc, range.offset);
                 range.offset -= adjust;
@@ -479,7 +481,7 @@ fn cleanup_char_boundary(solution: &mut Solution) {
             Diff::Insert(range) => {
                 skip_overlap(&last_insert, range);
                 if range.len == 0 {
-                    return false;
+                    continue;
                 }
                 let adjust = boundary_down(range.doc, range.offset);
                 range.offset -= adjust;
@@ -489,9 +491,11 @@ fn cleanup_char_boundary(solution: &mut Solution) {
                 last_insert = *range;
             }
         }
-        true
-    });
+        solution.diffs[retain] = diff;
+        retain += 1;
+    }
 
+    solution.diffs.truncate(retain);
     solution.utf8 = true;
 }
 
