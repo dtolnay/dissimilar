@@ -15,4 +15,4 @@ readme = "README.md"
 targets = ["x86_64-unknown-linux-gnu"]
 
 [dependencies]
-retain_mut = "0.1"
+retain_mut = { version = "0.1.4", features = ["std"] }
