@@ -910,8 +910,8 @@ impl Debug for Diff<'_, '_> {
             Diff::Delete(range) => ("Delete", bytes(range)),
             Diff::Insert(range) => ("Insert", bytes(range)),
         };
-        // let text = String::from_utf8_lossy(bytes);
-        write!(formatter, "{}({:?})", name, bytes)
+        let text = String::from_utf8_lossy(bytes);
+        write!(formatter, "{}({:?})", name, text)
     }
 }
 
