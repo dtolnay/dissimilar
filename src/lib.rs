@@ -62,6 +62,7 @@ mod range;
 mod tests;
 
 use crate::range::{bytes, str, Range};
+use retain_mut::RetainMut;
 use std::cmp;
 use std::collections::VecDeque;
 use std::fmt::{self, Debug};
@@ -434,10 +435,20 @@ fn cleanup_char_boundary(solution: &mut Solution) {
         adjust
     }
 
-    for diff in &mut solution.diffs {
+    fn contains_range<'a>(a: &Range<'a>, b: &Range<'a>) -> bool {
+        a.offset <= b.offset && a.offset + a.len >= b.offset + b.len
+    }
+
+    let mut last_delete = Range::empty();
+    let mut last_insert = Range::empty();
+    solution.diffs.retain_mut(|diff| {
         match diff {
             Diff::Equal(range1, range2) => {
                 let adjust = boundary_up(range1.doc, range1.offset);
+                // If the whole range is sub-character, skip it.
+                if range1.len <= adjust {
+                    return false;
+                }
                 range1.offset += adjust;
                 range1.len -= adjust;
                 range2.offset += adjust;
@@ -447,21 +458,30 @@ fn cleanup_char_boundary(solution: &mut Solution) {
                 range2.len -= adjust;
             }
             Diff::Delete(range) => {
+                if contains_range(&last_delete, range) {
+                    return false;
+                }
                 let adjust = boundary_down(range.doc, range.offset);
                 range.offset -= adjust;
                 range.len += adjust;
                 let adjust = boundary_up(range.doc, range.offset + range.len);
                 range.len += adjust;
+                last_delete = *range;
             }
             Diff::Insert(range) => {
+                if contains_range(&last_insert, range) {
+                    return false;
+                }
                 let adjust = boundary_down(range.doc, range.offset);
                 range.offset -= adjust;
                 range.len += adjust;
                 let adjust = boundary_up(range.doc, range.offset + range.len);
                 range.len += adjust;
+                last_insert = *range;
             }
         }
-    }
+        true
+    });
 
     solution.utf8 = true;
 }
@@ -881,8 +901,8 @@ impl Debug for Diff<'_, '_> {
             Diff::Delete(range) => ("Delete", bytes(range)),
             Diff::Insert(range) => ("Insert", bytes(range)),
         };
-        let text = String::from_utf8_lossy(bytes);
-        write!(formatter, "{}({:?})", name, text)
+        // let text = String::from_utf8_lossy(bytes);
+        write!(formatter, "{}({:?})", name, bytes)
     }
 }
 
