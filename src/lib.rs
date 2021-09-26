@@ -435,8 +435,13 @@ fn cleanup_char_boundary(solution: &mut Solution) {
         adjust
     }
 
-    fn contains_range<'a>(a: &Range<'a>, b: &Range<'a>) -> bool {
-        a.offset <= b.offset && a.offset + a.len >= b.offset + b.len
+    fn skip_overlap<'a>(prev: &Range<'a>, range: &mut Range<'a>) {
+        let prev_end = prev.offset + prev.len;
+        if prev_end > range.offset {
+            let delta = cmp::min(prev_end - range.offset, range.len);
+            range.offset += delta;
+            range.len -= delta;
+        }
     }
 
     let mut last_delete = Range::empty();
@@ -456,9 +461,12 @@ fn cleanup_char_boundary(solution: &mut Solution) {
                 let adjust = boundary_down(range1.doc, range1.offset + range1.len);
                 range1.len -= adjust;
                 range2.len -= adjust;
+                last_delete = Range::empty();
+                last_insert = Range::empty();
             }
             Diff::Delete(range) => {
-                if contains_range(&last_delete, range) {
+                skip_overlap(&last_delete, range);
+                if range.len == 0 {
                     return false;
                 }
                 let adjust = boundary_down(range.doc, range.offset);
@@ -469,7 +477,8 @@ fn cleanup_char_boundary(solution: &mut Solution) {
                 last_delete = *range;
             }
             Diff::Insert(range) => {
-                if contains_range(&last_insert, range) {
+                skip_overlap(&last_insert, range);
+                if range.len == 0 {
                     return false;
                 }
                 let adjust = boundary_down(range.doc, range.offset);
