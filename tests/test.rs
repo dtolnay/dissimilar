@@ -3,6 +3,8 @@
 //
 // This directory is for Rust-specific integration tests and regression tests.
 
+#![allow(clippy::non_ascii_literal)]
+
 use dissimilar::{diff, Chunk};
 
 #[test]
