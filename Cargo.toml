@@ -3,6 +3,7 @@ name = "dissimilar"
 version = "1.0.3"
 authors = ["David Tolnay <dtolnay@gmail.com>"]
 edition = "2018"
+rust-version = "1.31"
 license = "MIT OR Apache-2.0"
 description = "Diff library with semantic cleanup, based on Google's diff-match-patch"
 repository = "https://github.com/dtolnay/dissimilar"
