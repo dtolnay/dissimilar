@@ -49,6 +49,7 @@
     clippy::module_name_repetitions,
     clippy::must_use_candidate,
     clippy::new_without_default,
+    clippy::octal_escapes,
     clippy::shadow_unrelated,
     clippy::similar_names,
     clippy::too_many_lines,
