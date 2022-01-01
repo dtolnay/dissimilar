@@ -53,7 +53,8 @@
     clippy::shadow_unrelated,
     clippy::similar_names,
     clippy::too_many_lines,
-    clippy::unseparated_literal_suffix
+    clippy::unseparated_literal_suffix,
+    unused_parens, // false positive on Some(&(mut diff)) pattern
 )]
 
 mod find;
