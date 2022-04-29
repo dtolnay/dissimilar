@@ -24,6 +24,8 @@ dissimilar = "1.0"
 
 *Compiler support: requires rustc 1.31+*
 
+<br>
+
 ## Interface
 
 Here is the entire API of the Rust implementation. It operates on borrowed
@@ -42,17 +44,21 @@ pub fn diff(text1: &str, text2: &str) -> Vec<Chunk>;
 
 <br>
 
-#### License
+## License
 
-<sup>
-Licensed under either of <a href="LICENSE-APACHE">Apache License, Version
-2.0</a> or <a href="LICENSE-MIT">MIT license</a> at your option.
-</sup>
+The diff algorithm in this crate was ported to Rust using the Java and C++
+implementations found at <https://github.com/google/diff-match-patch> as
+reference, and is made available here under the <a href="LICENSE-APACHE">Apache
+License, Version 2.0</a> matching the license of the original. This entire
+project, including some parts unmodified from upstream and the Rust-specific
+modifications introduced in the course of porting the implementation, are
+distributed under this Apache license.
 
-<br>
+Intellectual property that is unique to the Rust implementation is additionally
+made available to you dually under the <a href="LICENSE-MIT">MIT license</a>, if
+you prefer. This applies to all design choices and implementation choices not
+found in the upstream repo.
 
-<sub>
 Unless you explicitly state otherwise, any contribution intentionally submitted
 for inclusion in this crate by you, as defined in the Apache-2.0 license, shall
-be dual licensed as above, without any additional terms or conditions.
-</sub>
+be dual Apache and MIT licensed, without any additional terms or conditions.
