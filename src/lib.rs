@@ -37,7 +37,7 @@
 //! [Myers' diff algorithm]: https://neil.fraser.name/writing/diff/myers.pdf
 //! [semantic cleanups]: https://neil.fraser.name/writing/diff/
 
-#![doc(html_root_url = "https://docs.rs/dissimilar/1.0.3")]
+#![doc(html_root_url = "https://docs.rs/dissimilar/1.0.4")]
 #![allow(
     clippy::blocks_in_if_conditions,
     clippy::cast_possible_wrap,
