@@ -10,11 +10,13 @@ macro_rules! diff_list {
         }
     };
     ($($kind:ident($text:literal)),+ $(,)?) => {{
+        #[allow(unused_macro_rules)]
         macro_rules! text1 {
             (Insert, $s:literal) => { "" };
             (Delete, $s:literal) => { $s };
             (Equal, $s:literal) => { $s };
         }
+        #[allow(unused_macro_rules)]
         macro_rules! text2 {
             (Insert, $s:literal) => { $s };
             (Delete, $s:literal) => { "" };
@@ -23,6 +25,7 @@ macro_rules! diff_list {
         let text1 = concat!($(text1!($kind, $text)),*);
         let text2 = concat!($(text2!($kind, $text)),*);
         let (_i, _j) = (&mut 0, &mut 0);
+        #[allow(unused_macro_rules)]
         macro_rules! range {
             (Insert, $s:literal) => {
                 Diff::Insert(range(text2, _j, $s))
