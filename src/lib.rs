@@ -40,6 +40,7 @@
 #![doc(html_root_url = "https://docs.rs/dissimilar/1.0.4")]
 #![allow(
     clippy::blocks_in_if_conditions,
+    clippy::bool_to_int_with_if,
     clippy::cast_possible_wrap,
     clippy::cast_sign_loss,
     clippy::cloned_instead_of_copied, // https://github.com/rust-lang/rust-clippy/issues/7127
