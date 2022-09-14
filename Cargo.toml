@@ -8,7 +8,6 @@ documentation = "https://docs.rs/dissimilar"
 edition = "2018"
 keywords = ["diff"]
 license = "Apache-2.0" # See the readme. The whole crate is Apache licensed. Some parts are additionally MIT licensed.
-readme = "README.md"
 repository = "https://github.com/dtolnay/dissimilar"
 rust-version = "1.31"
 
