@@ -4,7 +4,7 @@ Dissimilar: diff library with semantic cleanup
 [<img alt="github" src="https://img.shields.io/badge/github-dtolnay/dissimilar-8da0cb?style=for-the-badge&labelColor=555555&logo=github" height="20">](https://github.com/dtolnay/dissimilar)
 [<img alt="crates.io" src="https://img.shields.io/crates/v/dissimilar.svg?style=for-the-badge&color=fc8d62&logo=rust" height="20">](https://crates.io/crates/dissimilar)
 [<img alt="docs.rs" src="https://img.shields.io/badge/docs.rs-dissimilar-66c2a5?style=for-the-badge&labelColor=555555&logo=docs.rs" height="20">](https://docs.rs/dissimilar)
-[<img alt="build status" src="https://img.shields.io/github/workflow/status/dtolnay/dissimilar/CI/master?style=for-the-badge" height="20">](https://github.com/dtolnay/dissimilar/actions?query=branch%3Amaster)
+[<img alt="build status" src="https://img.shields.io/github/actions/workflow/status/dtolnay/dissimilar/ci.yml?branch=master&style=for-the-badge" height="20">](https://github.com/dtolnay/dissimilar/actions?query=branch%3Amaster)
 
 This library is a port of the Diff component of [Diff Match Patch] to Rust. The
 diff implementation is based on [Myers' diff algorithm] but includes some
