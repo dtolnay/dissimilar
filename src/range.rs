@@ -4,7 +4,7 @@ use std::ops::{self, RangeFrom, RangeFull, RangeTo};
 
 #[derive(Copy, Clone)]
 pub struct Range<'a> {
-    pub doc: &'a str,
+    pub doc: &'a [char],
     pub offset: usize,
     pub len: usize,
 }
@@ -12,19 +12,23 @@ pub struct Range<'a> {
 impl<'a> Range<'a> {
     pub fn empty() -> Self {
         Range {
-            doc: "",
+            doc: &[],
             offset: 0,
             len: 0,
         }
     }
 
-    pub fn new(doc: &'a str, bounds: impl RangeBounds) -> Self {
+    pub fn new(doc: &'a [char], bounds: impl RangeBounds) -> Self {
         let (offset, len) = bounds.index(doc.len());
         Range { doc, offset, len }
     }
 
     pub fn is_empty(&self) -> bool {
         self.len == 0
+    }
+
+    pub fn len_bytes(&self) -> usize {
+        self.chars().map(char::len_utf8).sum()
     }
 
     pub fn substring(&self, bounds: impl RangeBounds) -> Self {
@@ -49,32 +53,26 @@ impl<'a> Range<'a> {
         (self.substring(..mid), self.substring(mid..))
     }
 
-    pub fn chars(&self) -> impl Iterator<Item = char> + DoubleEndedIterator + 'a {
-        str(*self).chars()
+    pub fn chars(
+        &self,
+    ) -> impl Iterator<Item = char> + DoubleEndedIterator + ExactSizeIterator + 'a {
+        slice(*self).iter().copied()
     }
 
-    pub fn char_indices(&self) -> impl Iterator<Item = (usize, char)> + DoubleEndedIterator + 'a {
-        str(*self).char_indices()
+    pub fn starts_with(&self, prefix: impl AsRef<[char]>) -> bool {
+        slice(*self).starts_with(prefix.as_ref())
     }
 
-    pub fn bytes(&self) -> impl Iterator<Item = u8> + DoubleEndedIterator + ExactSizeIterator + 'a {
-        bytes(*self).iter().cloned()
+    pub fn ends_with(&self, suffix: impl AsRef<[char]>) -> bool {
+        slice(*self).ends_with(suffix.as_ref())
     }
 
-    pub fn starts_with(&self, prefix: impl AsRef<[u8]>) -> bool {
-        bytes(*self).starts_with(prefix.as_ref())
-    }
-
-    pub fn ends_with(&self, suffix: impl AsRef<[u8]>) -> bool {
-        bytes(*self).ends_with(suffix.as_ref())
-    }
-
-    pub fn find(&self, needle: impl AsRef<[u8]>) -> Option<usize> {
-        find(bytes(*self), needle.as_ref())
+    pub fn find(&self, needle: impl AsRef<[char]>) -> Option<usize> {
+        find(slice(*self), needle.as_ref())
     }
 }
 
-pub fn str(range: Range) -> &str {
+pub fn slice(range: Range) -> &[char] {
     if cfg!(debug)
         && range
             .doc
@@ -89,13 +87,9 @@ pub fn str(range: Range) -> &str {
     &range.doc[range.offset..range.offset + range.len]
 }
 
-pub fn bytes(range: Range) -> &[u8] {
-    &range.doc.as_bytes()[range.offset..range.offset + range.len]
-}
-
-impl AsRef<[u8]> for Range<'_> {
-    fn as_ref(&self) -> &[u8] {
-        bytes(*self)
+impl AsRef<[char]> for Range<'_> {
+    fn as_ref(&self) -> &[char] {
+        slice(*self)
     }
 }
 

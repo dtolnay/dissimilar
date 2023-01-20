@@ -1,5 +1,5 @@
 // The strstr implementation in this file is extracted from the Rust standard
-// library's str::find. The algorithm works for arbitrary &[u8] haystack and
+// library's str::find. The algorithm works for arbitrary &[T] haystack and
 // needle but is only exposed by the standard library on UTF-8 strings.
 //
 // https://github.com/rust-lang/rust/blob/1.40.0/src/libcore/str/pattern.rs
@@ -80,7 +80,7 @@
 use std::cmp;
 use std::usize;
 
-pub fn find(haystack: &[u8], needle: &[u8]) -> Option<usize> {
+pub fn find(haystack: &[char], needle: &[char]) -> Option<usize> {
     assert!(!needle.is_empty());
 
     // crit_pos: critical factorization index
@@ -177,12 +177,12 @@ pub fn find(haystack: &[u8], needle: &[u8]) -> Option<usize> {
     }
 }
 
-fn byteset_create(bytes: &[u8]) -> u64 {
-    bytes.iter().fold(0, |a, &b| (1 << (b & 0x3f)) | a)
+fn byteset_create(chars: &[char]) -> u64 {
+    chars.iter().fold(0, |a, &ch| (1 << (ch as u8 & 0x3f)) | a)
 }
 
-fn byteset_contains(byteset: u64, byte: u8) -> bool {
-    (byteset >> ((byte & 0x3f) as usize)) & 1 != 0
+fn byteset_contains(byteset: u64, ch: char) -> bool {
+    (byteset >> ((ch as u8 & 0x3f) as usize)) & 1 != 0
 }
 
 // Compute the maximal suffix of `arr`.
@@ -197,7 +197,7 @@ fn byteset_contains(byteset: u64, byte: u8) -> bool {
 // a critical factorization.
 //
 // For long period cases, the resulting period is not exact (it is too short).
-fn maximal_suffix(arr: &[u8], order_greater: bool) -> (usize, usize) {
+fn maximal_suffix(arr: &[char], order_greater: bool) -> (usize, usize) {
     let mut left = 0; // Corresponds to i in the paper
     let mut right = 1; // Corresponds to j in the paper
     let mut offset = 0; // Corresponds to k in the paper, but starting at 0
