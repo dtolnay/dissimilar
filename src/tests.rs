@@ -22,24 +22,24 @@ macro_rules! diff_list {
             (Delete, $s:literal) => { "" };
             (Equal, $s:literal) => { $s };
         }
-        let text1 = concat!($(text1!($kind, $text)),*);
-        let text2 = concat!($(text2!($kind, $text)),*);
+        let text1 = Range::new(concat!($(text1!($kind, $text)),*), ..);
+        let text2 = Range::new(concat!($(text2!($kind, $text)),*), ..);
         let (_i, _j) = (&mut 0, &mut 0);
         #[allow(unused_macro_rules)]
         macro_rules! range {
             (Insert, $s:literal) => {
-                Diff::Insert(range(text2, _j, $s))
+                Diff::Insert(range(text2.doc, _j, $s))
             };
             (Delete, $s:literal) => {
-                Diff::Delete(range(text1, _i, $s))
+                Diff::Delete(range(text1.doc, _i, $s))
             };
             (Equal, $s:literal) => {
-                Diff::Equal(range(text1, _i, $s), range(text2, _j, $s))
+                Diff::Equal(range(text1.doc, _i, $s), range(text2.doc, _j, $s))
             };
         }
         Solution {
-            text1: Range::new(text1, ..),
-            text2: Range::new(text2, ..),
+            text1,
+            text2,
             diffs: vec![$(range!($kind, $text)),*],
             utf8: true,
         }
