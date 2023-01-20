@@ -1,9 +1,12 @@
 use super::*;
+use once_cell::sync::OnceCell;
 
 macro_rules! range {
-    ($text:expr) => {
-        Range::new($text, ..)
-    };
+    ($text:expr) => {{
+        static CHARS: OnceCell<Vec<char>> = OnceCell::new();
+        let chars = CHARS.get_or_init(|| $text.chars().collect());
+        Range::new(chars, ..)
+    }};
 }
 
 macro_rules! diff_list {
@@ -12,7 +15,6 @@ macro_rules! diff_list {
             text1: Range::empty(),
             text2: Range::empty(),
             diffs: Vec::new(),
-            utf8: true,
         }
     };
     ($($kind:ident($text:literal)),+ $(,)?) => {{
@@ -47,13 +49,12 @@ macro_rules! diff_list {
             text1,
             text2,
             diffs: vec![$(range!($kind, $text)),*],
-            utf8: true,
         }
     }};
 }
 
-fn range<'a>(doc: &'a str, offset: &mut usize, text: &str) -> Range<'a> {
-    let len = text.len();
+fn range<'a>(doc: &'a [char], offset: &mut usize, text: &str) -> Range<'a> {
+    let len = text.chars().count();
     let range = Range {
         doc,
         offset: *offset,
@@ -76,7 +77,7 @@ macro_rules! assert_diffs {
 
 fn same_diffs(expected: &[Chunk], actual: &[Diff]) -> bool {
     fn eq(expected: &str, actual: &Range) -> bool {
-        expected == str(*actual)
+        expected.chars().eq(slice(*actual).iter().copied())
     }
 
     expected.len() == actual.len()
@@ -94,15 +95,15 @@ fn same_diffs(expected: &[Chunk], actual: &[Diff]) -> bool {
 fn test_common_prefix() {
     let text1 = range!("abc");
     let text2 = range!("xyz");
-    assert_eq!(0, common_prefix_bytes(text1, text2), "Null case");
+    assert_eq!(0, common_prefix(text1, text2), "Null case");
 
     let text1 = range!("1234abcdef");
     let text2 = range!("1234xyz");
-    assert_eq!(4, common_prefix_bytes(text1, text2), "Non-null case");
+    assert_eq!(4, common_prefix(text1, text2), "Non-null case");
 
     let text1 = range!("1234");
     let text2 = range!("1234xyz");
-    assert_eq!(4, common_prefix_bytes(text1, text2), "Whole case");
+    assert_eq!(4, common_prefix(text1, text2), "Whole case");
 }
 
 #[test]
@@ -110,17 +111,14 @@ fn test_common_suffix() {
     let text1 = range!("abc");
     let text2 = range!("xyz");
     assert_eq!(0, common_suffix(text1, text2), "Null case");
-    assert_eq!(0, common_suffix_bytes(text1, text2), "Null case");
 
     let text1 = range!("abcdef1234");
     let text2 = range!("xyz1234");
     assert_eq!(4, common_suffix(text1, text2), "Non-null case");
-    assert_eq!(4, common_suffix_bytes(text1, text2), "Non-null case");
 
     let text1 = range!("1234");
     let text2 = range!("xyz1234");
     assert_eq!(4, common_suffix(text1, text2), "Whole case");
-    assert_eq!(4, common_suffix_bytes(text1, text2), "Whole case");
 }
 
 #[test]
@@ -440,7 +438,6 @@ fn test_bisect() {
         text1,
         text2,
         diffs: bisect(text1, text2),
-        utf8: false,
     };
     assert_diffs!(
         [
