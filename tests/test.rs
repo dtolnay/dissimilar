@@ -21,7 +21,7 @@ fn test_unicode() {
 }
 
 #[test]
-fn test_unicode2() {
+fn test_issue9() {
     let a = "[乀丁abcd一]";
     let b = "[一abcd丁]";
     let d = diff(a, b);
@@ -35,6 +35,6 @@ fn test_unicode2() {
             Chunk::Delete("一"),
             Chunk::Insert("丁"),
             Chunk::Equal("]"),
-        ]
+        ],
     );
 }
