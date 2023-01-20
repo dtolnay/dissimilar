@@ -1,7 +1,6 @@
 use crate::find::find;
 use std::fmt::Debug;
 use std::ops::{self, RangeFrom, RangeFull, RangeTo};
-use std::str::{CharIndices, Chars};
 
 #[derive(Copy, Clone)]
 pub struct Range<'a> {
@@ -50,11 +49,11 @@ impl<'a> Range<'a> {
         (self.substring(..mid), self.substring(mid..))
     }
 
-    pub fn chars(&self) -> Chars<'a> {
+    pub fn chars(&self) -> impl Iterator<Item = char> + DoubleEndedIterator + 'a {
         str(*self).chars()
     }
 
-    pub fn char_indices(&self) -> CharIndices<'a> {
+    pub fn char_indices(&self) -> impl Iterator<Item = (usize, char)> + DoubleEndedIterator + 'a {
         str(*self).char_indices()
     }
 
