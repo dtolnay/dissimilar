@@ -38,3 +38,15 @@ fn test_issue9() {
         ],
     );
 }
+
+#[test]
+fn test_issue15() {
+    let a = "A のダ";
+    let b = "A ダ";
+    let d = diff(a, b);
+
+    assert_eq!(
+        d,
+        vec![Chunk::Equal("A "), Chunk::Delete("の"), Chunk::Equal("ダ")],
+    );
+}
