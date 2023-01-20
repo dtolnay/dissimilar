@@ -69,12 +69,16 @@ macro_rules! assert_diffs {
 }
 
 fn same_diffs(expected: &[Chunk], actual: &[Diff]) -> bool {
+    fn eq(expected: &str, actual: &Range) -> bool {
+        expected == str(*actual)
+    }
+
     expected.len() == actual.len()
         && expected.iter().zip(actual).all(|pair| match pair {
-            (Chunk::Insert(expected), Diff::Insert(actual)) => *expected == str(*actual),
-            (Chunk::Delete(expected), Diff::Delete(actual)) => *expected == str(*actual),
+            (Chunk::Insert(expected), Diff::Insert(actual)) => eq(expected, actual),
+            (Chunk::Delete(expected), Diff::Delete(actual)) => eq(expected, actual),
             (Chunk::Equal(expected), Diff::Equal(actual1, actual2)) => {
-                *expected == str(*actual1) && *expected == str(*actual2)
+                eq(expected, actual1) && eq(expected, actual2)
             }
             (_, _) => false,
         })
