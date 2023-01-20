@@ -1,5 +1,11 @@
 use super::*;
 
+macro_rules! range {
+    ($text:expr) => {
+        Range::new($text, ..)
+    };
+}
+
 macro_rules! diff_list {
     () => {
         Solution {
@@ -22,8 +28,8 @@ macro_rules! diff_list {
             (Delete, $s:literal) => { "" };
             (Equal, $s:literal) => { $s };
         }
-        let text1 = Range::new(concat!($(text1!($kind, $text)),*), ..);
-        let text2 = Range::new(concat!($(text2!($kind, $text)),*), ..);
+        let text1 = range!(concat!($(text1!($kind, $text)),*));
+        let text2 = range!(concat!($(text2!($kind, $text)),*));
         let (_i, _j) = (&mut 0, &mut 0);
         #[allow(unused_macro_rules)]
         macro_rules! range {
@@ -86,33 +92,33 @@ fn same_diffs(expected: &[Chunk], actual: &[Diff]) -> bool {
 
 #[test]
 fn test_common_prefix() {
-    let text1 = Range::new("abc", ..);
-    let text2 = Range::new("xyz", ..);
+    let text1 = range!("abc");
+    let text2 = range!("xyz");
     assert_eq!(0, common_prefix_bytes(text1, text2), "Null case");
 
-    let text1 = Range::new("1234abcdef", ..);
-    let text2 = Range::new("1234xyz", ..);
+    let text1 = range!("1234abcdef");
+    let text2 = range!("1234xyz");
     assert_eq!(4, common_prefix_bytes(text1, text2), "Non-null case");
 
-    let text1 = Range::new("1234", ..);
-    let text2 = Range::new("1234xyz", ..);
+    let text1 = range!("1234");
+    let text2 = range!("1234xyz");
     assert_eq!(4, common_prefix_bytes(text1, text2), "Whole case");
 }
 
 #[test]
 fn test_common_suffix() {
-    let text1 = Range::new("abc", ..);
-    let text2 = Range::new("xyz", ..);
+    let text1 = range!("abc");
+    let text2 = range!("xyz");
     assert_eq!(0, common_suffix(text1, text2), "Null case");
     assert_eq!(0, common_suffix_bytes(text1, text2), "Null case");
 
-    let text1 = Range::new("abcdef1234", ..);
-    let text2 = Range::new("xyz1234", ..);
+    let text1 = range!("abcdef1234");
+    let text2 = range!("xyz1234");
     assert_eq!(4, common_suffix(text1, text2), "Non-null case");
     assert_eq!(4, common_suffix_bytes(text1, text2), "Non-null case");
 
-    let text1 = Range::new("1234", ..);
-    let text2 = Range::new("xyz1234", ..);
+    let text1 = range!("1234");
+    let text2 = range!("xyz1234");
     assert_eq!(4, common_suffix(text1, text2), "Whole case");
     assert_eq!(4, common_suffix_bytes(text1, text2), "Whole case");
 }
@@ -120,25 +126,25 @@ fn test_common_suffix() {
 #[test]
 fn test_common_overlap() {
     let text1 = Range::empty();
-    let text2 = Range::new("abcd", ..);
+    let text2 = range!("abcd");
     assert_eq!(0, common_overlap(text1, text2), "Null case");
 
-    let text1 = Range::new("abc", ..);
-    let text2 = Range::new("abcd", ..);
+    let text1 = range!("abc");
+    let text2 = range!("abcd");
     assert_eq!(3, common_overlap(text1, text2), "Whole case");
 
-    let text1 = Range::new("123456", ..);
-    let text2 = Range::new("abcd", ..);
+    let text1 = range!("123456");
+    let text2 = range!("abcd");
     assert_eq!(0, common_overlap(text1, text2), "No overlap");
 
-    let text1 = Range::new("123456xxx", ..);
-    let text2 = Range::new("xxxabcd", ..);
+    let text1 = range!("123456xxx");
+    let text2 = range!("xxxabcd");
     assert_eq!(3, common_overlap(text1, text2), "Overlap");
 
     // Some overly clever languages (C#) may treat ligatures as equal to their
     // component letters. E.g. U+FB01 == 'fi'
-    let text1 = Range::new("fi", ..);
-    let text2 = Range::new("\u{fb01}i", ..);
+    let text1 = range!("fi");
+    let text2 = range!("\u{fb01}i");
     assert_eq!(0, common_overlap(text1, text2), "Unicode");
 }
 
@@ -428,8 +434,8 @@ fn test_cleanup_semantic() {
 
 #[test]
 fn test_bisect() {
-    let text1 = Range::new("cat", ..);
-    let text2 = Range::new("map", ..);
+    let text1 = range!("cat");
+    let text2 = range!("map");
     let solution = Solution {
         text1,
         text2,
@@ -454,24 +460,24 @@ fn test_main() {
     let solution = main(Range::empty(), Range::empty());
     assert_diffs!([], solution, "Null case");
 
-    let solution = main(Range::new("abc", ..), Range::new("abc", ..));
+    let solution = main(range!("abc"), range!("abc"));
     assert_diffs!([Equal("abc")], solution, "Equality");
 
-    let solution = main(Range::new("abc", ..), Range::new("ab123c", ..));
+    let solution = main(range!("abc"), range!("ab123c"));
     assert_diffs!(
         [Equal("ab"), Insert("123"), Equal("c")],
         solution,
         "Simple insertion",
     );
 
-    let solution = main(Range::new("a123bc", ..), Range::new("abc", ..));
+    let solution = main(range!("a123bc"), range!("abc"));
     assert_diffs!(
         [Equal("a"), Delete("123"), Equal("bc")],
         solution,
         "Simple deletion",
     );
 
-    let solution = main(Range::new("abc", ..), Range::new("a123b456c", ..));
+    let solution = main(range!("abc"), range!("a123b456c"));
     assert_diffs!(
         [
             Equal("a"),
@@ -484,7 +490,7 @@ fn test_main() {
         "Two insertions",
     );
 
-    let solution = main(Range::new("a123b456c", ..), Range::new("abc", ..));
+    let solution = main(range!("a123b456c"), range!("abc"));
     assert_diffs!(
         [
             Equal("a"),
@@ -497,12 +503,12 @@ fn test_main() {
         "Two deletions",
     );
 
-    let solution = main(Range::new("a", ..), Range::new("b", ..));
+    let solution = main(range!("a"), range!("b"));
     assert_diffs!([Delete("a"), Insert("b")], solution, "Simple case #1");
 
     let solution = main(
-        Range::new("Apples are a fruit.", ..),
-        Range::new("Bananas are also fruit.", ..),
+        range!("Apples are a fruit."),
+        range!("Bananas are also fruit."),
     );
     assert_diffs!(
         [
@@ -516,7 +522,7 @@ fn test_main() {
         "Simple case #2",
     );
 
-    let solution = main(Range::new("ax\t", ..), Range::new("\u{0680}x\000", ..));
+    let solution = main(range!("ax\t"), range!("\u{0680}x\000"));
     assert_diffs!(
         [
             Delete("a"),
@@ -529,7 +535,7 @@ fn test_main() {
         "Simple case #3",
     );
 
-    let solution = main(Range::new("1ayb2", ..), Range::new("abxab", ..));
+    let solution = main(range!("1ayb2"), range!("abxab"));
     assert_diffs!(
         [
             Delete("1"),
@@ -543,7 +549,7 @@ fn test_main() {
         "Overlap #1",
     );
 
-    let solution = main(Range::new("abcy", ..), Range::new("xaxcxabc", ..));
+    let solution = main(range!("abcy"), range!("xaxcxabc"));
     assert_diffs!(
         [Insert("xaxcx"), Equal("abc"), Delete("y")],
         solution,
@@ -551,8 +557,8 @@ fn test_main() {
     );
 
     let solution = main(
-        Range::new("ABCDa=bcd=efghijklmnopqrsEFGHIJKLMNOefg", ..),
-        Range::new("a-bcd-efghijklmnopqrs", ..),
+        range!("ABCDa=bcd=efghijklmnopqrsEFGHIJKLMNOefg"),
+        range!("a-bcd-efghijklmnopqrs"),
     );
     assert_diffs!(
         [
@@ -571,8 +577,8 @@ fn test_main() {
     );
 
     let solution = main(
-        Range::new("a [[Pennsylvania]] and [[New", ..),
-        Range::new(" and [[Pennsylvania]]", ..),
+        range!("a [[Pennsylvania]] and [[New"),
+        range!(" and [[Pennsylvania]]"),
     );
     assert_diffs!(
         [
