@@ -1,0 +1,21 @@
+[package]
+name = "dissimilar-fuzz"
+version = "0.0.0"
+authors = ["David Tolnay <dtolnay@gmail.com>"]
+edition = "2021"
+publish = false
+
+[package.metadata]
+cargo-fuzz = true
+
+[dependencies]
+libfuzzer-sys = "0.4"
+dissimilar = { path = ".." }
+
+[[bin]]
+name = "dissimilar_diff"
+path = "fuzz_targets/dissimilar_diff.rs"
+test = false
+doc = false
+
+[workspace]
