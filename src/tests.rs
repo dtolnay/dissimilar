@@ -47,12 +47,13 @@ macro_rules! diff_list {
 }
 
 fn range<'a>(doc: &'a str, offset: &mut usize, text: &str) -> Range<'a> {
+    let len = text.len();
     let range = Range {
         doc,
         offset: *offset,
-        len: text.len(),
+        len,
     };
-    *offset += text.len();
+    *offset += len;
     range
 }
 
