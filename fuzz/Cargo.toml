@@ -9,8 +9,8 @@ publish = false
 cargo-fuzz = true
 
 [dependencies]
-libfuzzer-sys = "0.4"
 dissimilar = { path = ".." }
+libfuzzer-sys = "0.4"
 
 [[bin]]
 name = "dissimilar_diff"
