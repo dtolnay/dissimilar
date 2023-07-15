@@ -1,6 +1,6 @@
 [package]
 name = "dissimilar"
-version = "1.0.6"
+version = "1.0.7"
 authors = ["David Tolnay <dtolnay@gmail.com>"]
 categories = ["algorithms", "text-processing"]
 description = "Diff library with semantic cleanup, based on Google's diff-match-patch"
