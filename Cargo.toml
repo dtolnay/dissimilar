@@ -14,9 +14,6 @@ rust-version = "1.36"
 [lib]
 doc-scrape-examples = false
 
-[dev-dependencies]
-once_cell = "1"
-
 [package.metadata.docs.rs]
 targets = ["x86_64-unknown-linux-gnu"]
 rustdoc-args = ["--generate-link-to-definition"]
