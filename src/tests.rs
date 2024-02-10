@@ -1,3 +1,7 @@
+#![allow(
+    clippy::incompatible_msrv, // https://github.com/rust-lang/rust-clippy/issues/12257
+)]
+
 use super::*;
 use std::sync::OnceLock;
 
