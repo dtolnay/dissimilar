@@ -801,7 +801,7 @@ fn cleanup_merge(solution: &mut Solution) {
                     if count_both > 1 {
                         let both_types = count_delete != 0 && count_insert != 0;
                         // Delete the offending records.
-                        diffs.splice(pointer - count_both..pointer, None);
+                        diffs.drain(pointer - count_both..pointer);
                         pointer -= count_both;
                         if both_types {
                             // Factor out any common prefix.
