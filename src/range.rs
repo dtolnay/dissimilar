@@ -73,17 +73,6 @@ impl<'a> Range<'a> {
 }
 
 pub fn slice(range: Range) -> &[char] {
-    if cfg!(debug)
-        && range
-            .doc
-            .get(range.offset..range.offset + range.len)
-            .is_none()
-    {
-        eprintln!(
-            "doc={:?} offset={} len={}",
-            range.doc, range.offset, range.len
-        );
-    }
     &range.doc[range.offset..range.offset + range.len]
 }
 
