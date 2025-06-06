@@ -60,6 +60,7 @@
     clippy::unseparated_literal_suffix,
     unused_parens, // false positive on Some(&(mut diff)) pattern
 )]
+#![allow(unknown_lints, mismatched_lifetime_syntaxes)]
 
 mod find;
 mod range;
