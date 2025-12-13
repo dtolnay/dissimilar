@@ -420,9 +420,8 @@ fn common_overlap(mut text1: Range, mut text2: Range) -> usize {
     let mut length = 1;
     loop {
         let pattern = text1.substring(text1.len - length..);
-        let found = match text2.find(pattern) {
-            Some(found) => found,
-            None => return best,
+        let Some(found) = text2.find(pattern) else {
+            return best;
         };
         length += found;
         if found == 0
