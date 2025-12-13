@@ -22,8 +22,6 @@ Diff Match Patch was originally built in 2006 to power Google Docs.
 dissimilar = "1.0"
 ```
 
-*Compiler support: requires rustc 1.36+*
-
 <br>
 
 ## Interface
