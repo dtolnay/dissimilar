@@ -912,7 +912,7 @@ impl Debug for Chunk<'_> {
             Chunk::Delete(text) => ("Delete", text),
             Chunk::Insert(text) => ("Insert", text),
         };
-        write!(formatter, "{}({:?})", name, text)
+        write!(formatter, "{name}({text:?})")
     }
 }
 
