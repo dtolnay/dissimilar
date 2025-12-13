@@ -78,7 +78,6 @@
 // reverse search, chosen instead so that |v'| < period(x).
 
 use std::cmp;
-use std::usize;
 
 pub fn find(haystack: &[char], needle: &[char]) -> Option<usize> {
     assert!(!needle.is_empty());
