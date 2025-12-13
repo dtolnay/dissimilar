@@ -9,7 +9,7 @@ edition = "2018"
 keywords = ["diff"]
 license = "Apache-2.0" # See the readme. The whole crate is Apache licensed. Some parts are additionally MIT licensed.
 repository = "https://github.com/dtolnay/dissimilar"
-rust-version = "1.65"
+rust-version = "1.68"
 
 [package.metadata.docs.rs]
 targets = ["x86_64-unknown-linux-gnu"]
