@@ -11,7 +11,7 @@ license = "Apache-2.0" # See the readme. The whole crate is Apache licensed. Som
 repository = "https://github.com/dtolnay/dissimilar"
 rust-version = "1.68"
 
-[dev-dependencies]
+[target.'cfg(not(miri))'.dev-dependencies]
 criterion = { version = "0.8", default-features = false }
 
 [[bench]]
