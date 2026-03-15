@@ -136,11 +136,13 @@ pub fn diff<'a>(text1: &'a str, text2: &'a str) -> Vec<Chunk<'a>> {
     cleanup_semantic(&mut solution);
     cleanup_merge(&mut solution);
 
-    let mut chunks = Vec::new();
     let mut pos1 = 0;
     let mut pos2 = 0;
-    for diff in solution.diffs {
-        chunks.push(match diff {
+
+    solution
+        .diffs
+        .into_iter()
+        .map(|diff| match diff {
             Diff::Equal(range, _) => {
                 let len = range.len_bytes();
                 let chunk = Chunk::Equal(&text1[pos1..pos1 + len]);
@@ -160,9 +162,8 @@ pub fn diff<'a>(text1: &'a str, text2: &'a str) -> Vec<Chunk<'a>> {
                 pos2 += len;
                 chunk
             }
-        });
-    }
-    chunks
+        })
+        .collect()
 }
 
 struct Solution<'a, 'b> {
