@@ -39,6 +39,7 @@
 
 #![doc(html_root_url = "https://docs.rs/dissimilar/1.0.11")]
 #![allow(
+    clippy::assert_is_empty,
     clippy::blocks_in_conditions,
     clippy::bool_to_int_with_if,
     clippy::cast_possible_wrap,
